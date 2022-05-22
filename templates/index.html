@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <meta name="description" content="Introducing Slakenet. Quench Your thirst for better communication">
+    <title>Airtime has never been more affordable! - Slakenet Wallet</title>
+{% endblock %}
+
+{% block content %}
+
+<div class="content-grid mdl-grid">
+    <div class="wallet-login-section mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+        <div class="wallet-slogan">Starving to Sub?<br/>Get ready to blow your data usage and your stomach!</div>
+        <div class="wallet-sub-slogan">Set up a wallet. Earn. Sub<br/>Airtime has never been more affordable!</div>
+        <form class="wallet-login" method="POST" action="/login" autocomplete="off">
+            {{ login_form.hidden_tag() }}
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                {{ login_form.email(class_="mdl-textfield__input", type="email") }}
+                <label class="mdl-textfield__label" for="loginEmail">{{ login_form.email.label }}</label>
+                <span class="mdl-textfield__error">Please Enter Valid Email Address</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                {{ login_form.password(class_="mdl-textfield__input", type="password") }}
+                <label class="mdl-textfield__label" for="loginPassword">{{ login_form.password.label }}</label>
+                <span class="mdl-textfield__error">
+                    Please Enter Valid Password
+                </span>
+            </div>
+            <button class="form-submit mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit"
+                name="submit">
+                Log In
+            </button>
+        </form>
+    </div>
+    <div class="wallet-signup-section mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+        <div class="wallet-slogan">Get Started.</div>
+        <div class="wallet-sub-slogan">Airtime has never been more affordable!</div>
+        <form class="wallet-signup" method="POST" action="/signup" autocomplete="off">
+            {{ signup_form.hidden_tag() }}
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                {{ signup_form.email(class_="mdl-textfield__input", type="email") }}
+                <label class="mdl-textfield__label" for="signupEmail">{{ signup_form.email.label }}</label>
+                <span class="mdl-textfield__error">
+                    Please Enter Valid Email Address
+                </span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                {{ signup_form.password(class_="mdl-textfield__input", type="password") }}
+                <label class="mdl-textfield__label" for="signupPassword">{{ signup_form.password.label }}</label>
+                <span class="mdl-textfield__error">
+                    Please Enter Valid Password
+                </span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                {{ signup_form.name(class_="mdl-textfield__input") }}
+                <label class="mdl-textfield__label" for="signupName">{{ signup_form.name.label }}</label>
+                <span class="mdl-textfield__error">
+                    Please Enter Your Name
+                </span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                {{ signup_form.deposit(class_="mdl-textfield__input")}}
+                <label class="mdl-textfield__label" for="signupDeposit">{{ signup_form.deposit.label }}</label>
+                <span class="mdl-textfield__error">
+                    Please Enter Valid Amount
+                </span>
+            </div>
+            <button class="form-submit mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit"
+                name="submit">
+                Sign up
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
