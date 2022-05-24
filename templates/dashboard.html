@@ -8,122 +8,106 @@
 {% block content %}
 <div class="content-grid mdl-grid">
     <div class="wallet-padded-mini wallet-dashboard-section mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-        <div class="wallet-slogan">SLAKES: {{ balance }}</div>
+        <div class="wallet-slogan">NGN: {{ balance }}</div>
         <div class="wallet-sub-slogan">Airtime has never been more affordable</div>
-    <!-- <div class="content-grid mdl-grid">
-    	<div class="wallet-login-section mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-    		<div><button class="form-submit mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit" name="submit">TRADE SLAKES</button></div>
-    	</div>
-    	<div class="wallet-signup-section mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-    		<div><button class="form-submit mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit" name="submit">BUY AIRTIME</button></div>
-    	</div>
-    	</div>
-    </div> -->
-</div></div>
-
-    <!-- EARN SLAKES -->
-    <div class="buyslakes">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="border_testi">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="title text_align_center">
-                                    <h2>Marketplace</h2>
+</div>
+    
+<!-- DEAL WITH  SLAKES -->
+<div class="buyslakes">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="border_testi">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="title text_align_center">
+                                <h2>Marketplace</h2>
+                            </div>
+                            <div class="warpper">
+                                <input class="radio" id="earn" name="group" type="radio">
+                                <input class="radio" id="buy" name="group" type="radio" checked>
+                                <input class="radio" id="Soon" name="group" type="radio">
+                                <!-- <p class="text_align_center">Pay with:</p> -->
+                                <div class="tabs text_align_center">
+                                    <label class="tab" id="earn-tab" for="earn">Earn</label>
+                                    <label class="tab" id="buy-tab" for="buy">Buy airtime</label>
+                                    <label class="tab" id="Soon-tab" for="Soon">Coming soon</label>
                                 </div>
-                                <div class="warpper">
-                                    <input class="radio" id="earn" name="group" type="radio">
-                                    <input class="radio" id="buy" name="group" type="radio" checked>
-                                    <input class="radio" id="Soon" name="group" type="radio">
-                                    <!-- <p class="text_align_center">Pay with:</p> -->
-                                    <div class="tabs text_align_center">
-                                        <label class="tab" id="earn-tab" for="earn">Earn SLAKEs</label>
-                                        <label class="tab" id="buy-tab" for="buy">Buy airtime</label>
-                                        <label class="tab" id="Soon-tab" for="Soon">Coming soon</label>
-                                    </div>
-                                    <div class="panels">
-                                        <div class="panel" id="earn-panel">
-                                            <div class="panel-title">Earn from taking surveys</div>
-                                            <div class="Marketplace text_align_center">
-                                                <input type="text" name="card_number" placeholder="Your credit card number">
-                                                <p>Select a survey from the list and start earning!</p>
-                                                <!-- Surveys go here -->
-                                                <!-- Write python script to automatically generate survey names and descriptions from csv file and insert them in a for loop of available surveys and exempt surveys that have already been taken by the user -->
-                                                <div class="row">
-                                                        <div class="col-md-3">
-                                                            <div class="testomoniam_text text_align_center">
-                                                                <i><img src="static/images/graf2.jpg" alt="#"/></i>
-                                                                <!-- <h3>Satoshi</h3> -->
-                                                                <p></p>
-                                                                <button>Done</button>
-                                                                <button>Share</button>
-                                                                <img src="static/images/icon.png" alt='"' />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-9">
-                                                            <div class="testomoniam_text text_align_left">
-                                                                <div id="wa_hover" class="wallet_box text_align_center">
-                                                                    <a href="/survey/{{ i_title }}" target="_blank">
-                                                                        <!-- <i><img src="static/images/wa3.svg" alt="#"/></i> -->
-                                                                        <h3>Enuresis Survey</h3>
-                                                                        <p>{{ i }}</p>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
+                                <div class="panels">
+                                    <div class="panel" id="earn-panel">
+                                        <div class="panel-title">Earn from taking surveys</div>
+                                        <div class="Marketplace text_align_center">
+                                            <input type="text" name="card_number" placeholder="Your credit card number">
+                                            <p>Select a survey from the list and start earning!</p>
+                                            <!-- Surveys go here -->
+                                            <!-- Write python script to exempt surveys that have already been taken by the user -->
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="testomoniam_text text_align_center">
+                                                        <i><img src="static/images/graf2.jpg" alt="#"/></i>
+                                                        <p></p>
+                                                        <button>Done</button>
+                                                        <button>Share</button>
+                                                        <img src="static/images/icon.png" alt='"' />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="testomoniam_text text_align_left">
+                                                        <div id="wa_hover" class="wallet_box text_align_center">
+                                                            <a href="/survey/{{ i_title }}" target="_blank">
+                                                                <!-- <i><img src="static/images/wa3.svg" alt="#"/></i> -->
+                                                                <h3>{{ i_title }}</h3>
+                                                                <p>{{ i }}</p>
+                                                            </a>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <div class="testomoniam_text text_align_center">
-                                                                <i><img src="static/images/graf2.jpg" alt="#"/></i>
-                                                                <!-- <h3>Satoshi</h3> -->
-                                                                <p></p>
-                                                                <button>Done</button>
-                                                                <button>Share</button>
-                                                                <img src="static/images/icon.png" alt='"' />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-9">
-                                                            <div class="testomoniam_text text_align_left">
-                                                                <div id="wa_hover" class="wallet_box text_align_center">
-                                                                    <a href="/survey/{{ j_title }}" target="_blank">
-                                                                        <!-- <i><img src="static/images/wa3.svg" alt="#"/></i> -->
-                                                                        <h3>Mould Hub survey</h3>
-                                                                        <p>{{ j }}</p>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="testomoniam_text text_align_center">
+                                                        <i><img src="static/images/graf2.jpg" alt="#"/></i>
+                                                        <p></p>
+                                                        <button>Done</button>
+                                                        <button>Share</button>
+                                                        <img src="static/images/icon.png" alt='"' />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="testomoniam_text text_align_left">
+                                                        <div id="wa_hover" class="wallet_box text_align_center">
+                                                            <a href="/survey/{{ j_title }}" target="_blank">
+                                                                <h3>{{ j_title }}</h3>
+                                                                <p>{{ j }}</p>
+                                                            </a>
                                                         </div>
                                                     </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="panel" id="buy-panel">
-                                            <div class="panel-title">Purchase airtime</div>
-                                            <div class="Marketplace text_align_center">
-                                                <p>Choose your Cellular Network:</p>
-                                                <form>
-                                                    <select name="networks" onchange="combo(this, 'network')">
-                                                        <option>MTN</option>
-                                                        <option>GLO</option>
-                                                        <option>Airtel</option>
-                                                        <option>9 Mobile</option>
-                                                    </select>
-                                                </form>
-                                                <p>1 SLAKE is 1 MegaByte</p>
-                                                <p>Warning: we don't refund if your funds are sent to the wrong phone number</p>
-                                                <p>Amount in Naira: <input type="number" name="amount" min = "10" max = "5000" value="500"></p>
-                                                <input type="text" name="phone_number" placeholder="Your phone number">
-                                                <button class="button">Fund</button>
-                                            </div>
-                                        </div>
-                                        <div class="panel" id="Soon-panel">
-                                            <div class="panel-title">Coming soon features.</div>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea</p>
                                         </div>
                                     </div>
+                                    <div class="panel" id="buy-panel">
+                                        <div class="panel-title">Purchase airtime</div>
+                                        <div class="Marketplace text_align_center">
+                                            <p>Choose your Cellular Network:</p>
+                                            <form>
+                                                <select name="networks" onchange="combo(this, 'network')" id="network">
+                                                <option>MTN</option>
+                                                <option>GLO</option>
+                                                <option>Airtel</option>
+                                                <option>9 Mobile</option>
+                                            </select>
+                                        </form>
+                                        <p>1 SLAKE is 1 NGN</p>
+                                        <p>Warning: we don't refund if your funds are sent to the wrong phone number</p>
+                                        <p>Amount in Naira: <input type="number" name="amount" min = "10" max = "5000" value="500" id="amount"></p>
+                                        <input type="text" name="phone_number" placeholder="Your phone number" id="phone_number">
+                                        <button class="button", onclick="get_AT_values()">Fund</button>
+                                    </div>
+                                </div>
+                                <div class="panel" id="Soon-panel">
+                                    <div class="panel-title">Coming soon features.</div>
+                                    <p>This is just the tip of the Iceberg, Slakenet is bringing mind blowing solutions to make your use of the internet as a reliable source of communication even better</p>
                                 </div>
                             </div>
                         </div>
@@ -132,5 +116,7 @@
             </div>
         </div>
     </div>
-        
+</div>
+</div>
+
 {% endblock %}
