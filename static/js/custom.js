@@ -75,9 +75,6 @@ function getURL() { window.location.href; } var protocol = location.protocol; $.
 		});
     });
 	
-	
-	
-	
 	/* Toggle sidebar
 	-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
      
@@ -109,7 +106,19 @@ function closeNav() {
   document.getElementById("mySidepanel").style.width = "0";
 }
 
+// Subscribe to newsletter
 function Subscribe(){
 	//subscribe to newsletter here
-	return
+	email = document.getElementById("subs_email").value;
+	alert("Sucessfuly subscribed! "+email);
+}
+
+// get values for running Africa's talking API
+function get_AT_values(){
+	cell_network = document.getElementById("network").value;
+	amount = document.getElementById("amount").value;
+	phone_number = document.getElementById("phone_number").value;
+	window.location = $"/buy_airtime/{cell_network}/{phone_number}/{amount}/";
+	alert("Awesome, you've got the values successfully:"
+		+"network: "+cell_network+" amount: "+amount+" phone number: "+phone_number)
 }
