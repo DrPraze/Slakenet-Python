@@ -46,7 +46,7 @@
                                                     <div class="testomoniam_text text_align_center">
                                                         <i><img src="static/images/graf2.jpg" alt="#"/></i>
                                                         <p></p>
-                                                        <button>Done</button>
+                                                        <button onclick="update_survey('i_')">Done</button>
                                                         <button>Share</button>
                                                         <img src="static/images/icon.png" alt='"' />
                                                     </div>
@@ -54,7 +54,7 @@
                                                 <div class="col-md-9">
                                                     <div class="testomoniam_text text_align_left">
                                                         <div id="wa_hover" class="wallet_box text_align_center">
-                                                            <a href="/survey/{{ i_title }}" target="_blank">
+                                                            <a href="/survey/{{ i_title }}" id='i_' target="_blank">
                                                                 <!-- <i><img src="static/images/wa3.svg" alt="#"/></i> -->
                                                                 <h3>{{ i_title }}</h3>
                                                                 <p>{{ i }}</p>
@@ -68,7 +68,7 @@
                                                     <div class="testomoniam_text text_align_center">
                                                         <i><img src="static/images/graf2.jpg" alt="#"/></i>
                                                         <p></p>
-                                                        <button>Done</button>
+                                                        <button onclick="update_survey('j')">Done</button>
                                                         <button>Share</button>
                                                         <img src="static/images/icon.png" alt='"' />
                                                     </div>
@@ -76,7 +76,7 @@
                                                 <div class="col-md-9">
                                                     <div class="testomoniam_text text_align_left">
                                                         <div id="wa_hover" class="wallet_box text_align_center">
-                                                            <a href="/survey/{{ j_title }}" target="_blank">
+                                                            <a href="/survey/{{ j_title }}" class="{{ j_title }}" id="j" target="_blank">
                                                                 <h3>{{ j_title }}</h3>
                                                                 <p>{{ j }}</p>
                                                             </a>
