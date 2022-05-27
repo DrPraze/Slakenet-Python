@@ -113,12 +113,10 @@ function Subscribe(){
 	alert("Sucessfuly subscribed! "+email);
 }
 
-// get values for running Africa's talking API
+// get values for running Accurate Topup
 function get_AT_values(){
 	cell_network = document.getElementById("network").value;
 	amount = document.getElementById("amount").value;
 	phone_number = document.getElementById("phone_number").value;
-	window.location = $"/buy_airtime/{cell_network}/{phone_number}/{amount}/";
-	alert("Awesome, you've got the values successfully:"
-		+"network: "+cell_network+" amount: "+amount+" phone number: "+phone_number)
+	window.location.href = ("http://127.0.0.1:5000/buy_airtime/"+network+"/"+phone_number+"/"+amount);
 }
