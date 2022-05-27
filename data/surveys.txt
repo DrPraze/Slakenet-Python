@@ -1,1 +1,1 @@
-['enuresis', 'market_research']
+["enuresis", "market_research", "slakenet"]
