@@ -50,36 +50,12 @@ def about():
 def policy():
 	return send_from_directory('', 'policy.html')
 
-# communicate with africa's talking api by collecting the phone number
-# and amount params, parse it and credit the number with airtime
-# @app.route('/buy_airtime/<number>/<amount>', methods = ['GET', 'POST'])
-# def buy_airtime(number, amount):
-# 	account_balance = load_user_balance()
-# 	# print(account_balance)
-# 	if int(account_balance) >= int(amount):
-# 		try:
-# 			at.initialize(username, api_key)
-# 			airtime = at.Airtime
-# 			account = at.Application
-# 			response = airtime.send(phone_number=number, amount=amount, currency_code="NGN")
-# 			# return jsonify(response), redirect(url_for('page_dashboard'))
-# 			flash(i18n.t("Successfully loaded TopUp. Enjoy!"))
-# 			return redirect(url_for('page_dashboard'))
-# 		except Exception as e:
-# 			flash(i18n.t("An Error Occured while trying to TopUp"))
-# 			return redirect(url_for("page_dashboard"))
-# 	else:
-# 		# return jsonify("Error: Not enough funds to purchase this amount"), redirect(url_for('page_dashboard'))
-# 		flash(i18n.t("Failed to TopUp due to insufficient balance"))
-# 		return redirect(url_for("page_dashboard"))
-
 # buy airtime with VTU.ng's API
-@app.route('buy_airtime/<network>/<number>/<amount>', methods=['GET'])
+@app.route('/buy_airtime/<network>/<number>/<amount>', methods=['GET'])
 def buy_airtime(number, amount):
 	account_balance = load_user_balance()
 	if int(account_balance) > int(amount):
 		r = requests.get("https://vtu.ng/wp-json/api/v1/airtime?username=slakenet&password=Slakee404!&phone="+number+"&network_id="+network+"&amount="+amount)
-		# return jsonify(response)
 		if r["code"] == "success":
 			flash(i18n.t("Successfully loaded TopUp. Enjoy!"))
 			return redirect(url_for("page_dashboard"))
@@ -98,16 +74,19 @@ def survey(survey_name):
 
 @app.route('/done/<taken_survey>')
 def update_survey(taken_survey):
-	email = session['email']
-	with open('done.txt', 'w+') as f:
-		data_dict = eval(f.read())
-		survey_list = data_dict[email]
-		survey_list.remove(taken_survey)
-		data_dict[email] = survey_list
-		f.truncate()
-		f.write(data_dict)
+	user_email = session['email']
+	f = open('data/done.txt', 'r')
+	data_dict = eval(f.read())
+	survey_list = data_dict[user_email]
+	# survey_list.remove(taken_survey)
+	survey_list.add(taken_survey)
+	data_dict[user_email] = survey_list
+	f.close()
+	f = open('data/done.txt', 'w')
+	f.truncate()
+	f.write(str(data_dict))
 	flash(i18n.t("Survey completed!"))
 	return redirect(url_for("page_dashboard"))
 
 if __name__=='__main__':
-	app.run(debug = True
+	app.run(debug = True)
