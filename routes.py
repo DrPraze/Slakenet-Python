@@ -41,16 +41,23 @@ def page_dashboard():
         return redirect(url_for('page_index'))
 
     account_balance = load_user_balance()
-    # user_expenses = get_user_expenses()
-    # add_expense_form = AddExpenseForm()
-    # return render_template('dashboard.html', logged_in=True, balance=account_balance, expense_form=add_expense_form, expenses=user_expenses)
     s = open("data/surveys.txt")
     s = eval(s.read())
-    # for i, j in s:
-    i_title, j_title = s[0], s[1]
+    t = open("data/done.txt")
+    user_email = session['email']
+    data_dict = eval(t.read())
+    done_list = data_dict[user_email]
+    def filter_survey(lst1, lst2):
+        lst3 = []
+        for i in lst2:
+            if i  not in lst1:
+                lst3.append(i)
+                print(lst3)
+        return lst3
+    survey = filter_survey(done_list, s)
+    i_title, j_title = survey[0], survey[1]
     i = open('data/'+i_title+'.txt').read()
     j = open('data/'+j_title+'.txt').read()
-        # render_template('dashboard.html', logged_in=True, balance=account_balance, i = i)
     return render_template('dashboard.html', logged_in=True,
         balance=account_balance, i = i, j = j, i_title = i_title,
         j_title = j_title)
