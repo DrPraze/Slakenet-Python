@@ -9,7 +9,7 @@ from routes import initialize_website_routes, initialize_error_handlers
 # Use waitress to serve flask app
 from waitress import serve
 # import stripe
-import africastalking as AT
+# import africastalking as AT
 
 from middleware import load_user_balance
 from dataservice import DataService
@@ -78,8 +78,7 @@ def update_survey(taken_survey):
 	f = open('data/done.txt', 'r')
 	data_dict = eval(f.read())
 	survey_list = data_dict[user_email]
-	# survey_list.remove(taken_survey)
-	survey_list.add(taken_survey)
+	survey_list.append(taken_survey)
 	data_dict[user_email] = survey_list
 	f.close()
 	f = open('data/done.txt', 'w')
