@@ -9,7 +9,7 @@
 <div class="content-grid mdl-grid">
     <div class="wallet-padded-mini wallet-dashboard-section mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
         <div class="wallet-slogan">NGN: {{ balance }}</div>
-        <div class="wallet-sub-slogan">Airtime has never been more affordable</div>
+        <div class="wallet-sub-slogan">Start slaking in the market square</div>
 </div>
     
 <!-- DEAL WITH  SLAKES -->
@@ -24,10 +24,10 @@
                 <!-- <div class="border_testi"> -->
                 <div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12"><!-- 
                             <div class="title text_align_center">
                                 <h2>Marketplace</h2>
-                            </div>
+                            </div> -->
                             <div class="warpper">
                                 <input class="radio" id="earn" name="group" type="radio">
                                 <input class="radio" id="buy" name="group" type="radio" checked>
@@ -42,7 +42,6 @@
                                     <div class="panel" id="earn-panel">
                                         <div class="panel-title">Earn from taking surveys</div>
                                         <div class="Marketplace text_align_center">
-                                            <input type="text" name="card_number" placeholder="Your credit card number">
                                             <p>Select a survey from the list and start earning!</p>
                                             <!-- Complete python script to exempt surveys that have already been taken by the user -->
                                             <div class="row">
@@ -52,7 +51,6 @@
                                                         <p></p>
                                                         <button><a href="/done/{{ i_title }}"> Done</a></button>
                                                         <button>Share</button>
-                                                        <img src="static/images/icon.png" alt='"' />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-9">
@@ -72,9 +70,8 @@
                                                     <div class="testomoniam_text text_align_center">
                                                         <i><img src="static/images/graf2.jpg" alt="#"/></i>
                                                         <p></p>
-                                                        <button onclick="update_survey('j')">Done</button>
+                                                        <button><a href="/done/{{ j_title }}"> Done</a></button>
                                                         <button>Share</button>
-                                                        <img src="static/images/icon.png" alt='"' />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-9">
