@@ -8,10 +8,7 @@ from settings import Config
 from routes import initialize_website_routes, initialize_error_handlers
 # Use waitress to serve flask app
 from waitress import serve
-# import stripe
-# import africastalking as AT
-
-from middleware import load_user_balance
+from middleware import load_user_balance, update_user_balance
 from dataservice import DataService
 
 app = Flask(__name__)
@@ -20,14 +17,8 @@ CORS(app)
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
-# Africastalking is used to communcaite with an API Called Africa's Talking
-# It is an API for crediting phone numbers with airtime
-# Username for using Africa'sTalkingGateway
-username = "Slakenet"
-# Africa's talking api key
-api_key = "some-api-key"
-# AFrica's talking slakenet sandbox
-sandbox = "optional-sandbox"
+# No sand box available for VTU.ng
+# sandbox = "optional-sandbox"
 
 DATA_SERVICE = DataService()
 
@@ -52,11 +43,12 @@ def policy():
 
 # buy airtime with VTU.ng's API
 @app.route('/buy_airtime/<network>/<number>/<amount>', methods=['GET'])
-def buy_airtime(number, amount):
+def buy_airtime(network, number, amount):
 	account_balance = load_user_balance()
 	if int(account_balance) > int(amount):
 		r = requests.get("https://vtu.ng/wp-json/api/v1/airtime?username=slakenet&password=Slakee404!&phone="+number+"&network_id="+network+"&amount="+amount)
 		if r["code"] == "success":
+			account_balance = int(account_balance)-amount
 			flash(i18n.t("Successfully loaded TopUp. Enjoy!"))
 			return redirect(url_for("page_dashboard"))
 		elif r["code"] == "failure":
@@ -86,6 +78,55 @@ def update_survey(taken_survey):
 	f.write(str(data_dict))
 	flash(i18n.t("Survey completed!"))
 	return redirect(url_for("page_dashboard"))
+
+@app.route('/deposit/<email>/<admin_password>/<amount>')
+def deposit(email, admin_password, amount):
+	if admin_password=="Slakee404!":
+		try:
+			return update_user_balance(email, amount)
+		except Exception as e:
+			# return "email doesn't exist in database"
+			return e
+	else:
+		return jsonify("Incorrect password")
+
+@app.route('/upload_survey/<password>/<survey_name>/<description>/<html>')
+def upload_survey(password, survey_name, description, html):
+	# Would check if survey already exists, if not, create one with the params
+	if password == "Slakee404!":
+		with open(f"data/{survey_name}.txt", "w") as f:
+			f.write(f"{description}")
+			f.close()
+		with open(f"data/{survey_name}.html", "w") as f:
+			f.write(f"{html}")
+			f.close()
+		s = open("data/surveys.txt")
+		s = eval(s.read())
+		s.insert(survey_name)
+		with open("data/surveys.txt") as f:
+			f.truncate()
+			f.write(str(s))
+			f.close()
+		return jsonify("Successfully added survey")
+	return jsonify("Couldn't add survey, Something went wrong")
+
+@app.route('/delete_survey/<password>/<survey_name>')
+def delete_survey(survey_name):
+	if password == "Slakee404!":
+		with open(f"data/{survey_name}.txt") as textfile:
+			os.remove(textfile)
+		with open(f"data/{survey_name}.html") as htmlfile:
+			os.remove(htmlfile)
+		s = open("data/surves.txt")
+		s = eval(s.read())
+		s.pop(s.index(survey_name))
+		with open("data/surveys.txt") as f:
+			f.truncate()
+			f.write(str(s))
+			f.close()
+		return jsonify("Successfully deleted survey")
+	return jsonify("Couldn't delete survey, something went wrong")
+
 
 if __name__=='__main__':
 	app.run(debug = True)
