@@ -1,6 +1,6 @@
 """ Routes data requests """
 
-from flask import render_template, redirect, url_for, flash, session, request
+from flask import render_template, redirect, url_for, flash, session, request, jsonify
 import i18n
 
 # from forms import SignupForm, LoginForm, AddExpenseForm, TopUpForm
@@ -80,6 +80,9 @@ def load_user_balance():
     account_balance = DATA_SERVICE.load_user_balance(session['email'])
     return account_balance
 
+def update_user_balance(email, amount):
+    account_balance = DATA_SERVICE.update_balance(email, amount)
+    return jsonify(account_balance)
 
 # def add_expense():
 #     """ Adds expense to logged in users wallet """
