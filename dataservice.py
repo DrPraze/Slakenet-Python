@@ -10,6 +10,7 @@ i18n.load_path.append('locales')
 class DataService:
 	""" Provides data to the rest of the app """
 	USERS = eval(open('data/emails.txt', 'r').read())
+	done = eval(open('data/done.txt', 'r').read())
 	def __init__(self):
 		""" Initializes data service """
 		pass
@@ -23,9 +24,13 @@ class DataService:
 			with open('data/emails.txt', 'w') as f:
 				f.truncate()
 				f.write(str(self.USERS))
+			self.done[email] = []
+			with open('data/done.txt', 'w') as f:
+				f.truncate()
+				f.write(str(self.done))
 			return str(new_user.id)
+			# return True
 		else:
-			# return str(self.USERS[email].replace('"', '').id)
 			return False
 
 	def login(self, email, password):
@@ -47,57 +52,19 @@ class DataService:
 
 		return i18n.t('wallet.wallet_not_found')
 
-	# def add_expense(self, email, amount, note):
-	#     """ Adds expense to user account """
-	#     if email in self.USERS:
-	#         expense = Expense(amount, note)
-	#         if self.USERS[email].add_expense(expense):
-	#             return i18n.t('wallet.expense_added')
-	#         else:
-	#             return i18n.t('wallet.expense_not_added')
-
-	#     return i18n.t('wallet.wallet_not_found')
-
-	# def get_user_expenses(self, email):
-	#     """ Gets user's expenses """
-	#     if email in self.USERS:
-	#         return self.USERS[email].expenses
-
-	#     return i18n.t('wallet.wallet_not_found')
-
-	# def get_user_expense_by_id(self, expense_id, email):
-	#     """ Gets user expense by id """
-	#     if email in self.USERS:
-	#         for expense in self.USERS[email].expenses:
-	#             if expense_id == str(expense.id):
-	#                 return expense
-
-	#         return i18n.t('wallet.expense_not_found')
-
-	#     return i18n.t('wallet.wallet_not_found')
-
-	# def update_expense(self, email, expense_id, amount, note):
-	#     """ Updates user expense """
-	#     if email in self.USERS:
-	#         for expense in self.USERS[email].expenses:
-	#             if expense_id == expense.id:
-	#                 expense.update(amount, note)
-	#                 return i18n.t('wallet.expense_updated')
-
-	#     return i18n.t('wallet.wallet_not_found')
-
-	# def delete_expense(self, email, expense_id):
-	#     """ Deletes user expense """
-	#     if email in self.USERS:
-	#         for expense in self.USERS[email].expenses:
-	#             if expense_id == expense.id:
-	#                 self.USERS[email].delete_expense(expense)
-	#                 return i18n.t('wallet.expense_deleted')
-
 	def get_account_details(self, email):
 		""" Gets user account details """
 		if email in self.USERS:
 			return self.USERS[email]
+
+	def update_balance(self, email, amount):
+		if email in self.USERS:
+			self.USERS[email][3] = int(self.USERS[email][3])+int(amount)
+			with open('data/emails.txt', 'w') as f:
+				f.truncate()
+				f.write(str(self.USERS))
+			self.USERS = eval(open('data/emails.txt', 'r').read())
+			return self.USERS[email][3] 
 
 	def topup_account(self, email, amount):
 		""" Tops up user account with specified amount """
