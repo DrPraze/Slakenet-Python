@@ -49,7 +49,7 @@ def buy_airtime(network, number, amount):
 		r = requests.get("https://vtu.ng/wp-json/api/v1/airtime?username=slakenet&password=Slakee404!&phone="+number+"&network_id="+network+"&amount="+amount)
 		if r["code"] == "success":
 			account_balance = int(account_balance)-amount
-			flash(i18n.t("Successfully loaded TopUp. Enjoy!"))
+			flash(i18n.t("wallet.topup_successful"))
 			return redirect(url_for("page_dashboard"))
 		elif r["code"] == "failure":
 			flash(i18n.t(r["message"]))
@@ -64,6 +64,7 @@ def buy_airtime(network, number, amount):
 def survey(survey_name):
 	return send_from_directory('data', f'{survey_name}.html')
 
+# app route to remove taken surveys from a user's list
 @app.route('/done/<taken_survey>')
 def update_survey(taken_survey):
 	user_email = session['email']
@@ -79,37 +80,49 @@ def update_survey(taken_survey):
 	flash(i18n.t("Survey completed!"))
 	return redirect(url_for("page_dashboard"))
 
+# app route for an admin to topup the account of a user
 @app.route('/deposit/<email>/<admin_password>/<amount>')
 def deposit(email, admin_password, amount):
 	if admin_password=="Slakee404!":
 		try:
 			return update_user_balance(email, amount)
 		except Exception as e:
-			# return "email doesn't exist in database"
-			return e
+			return "email doesn't exist in database"
 	else:
 		return jsonify("Incorrect password")
 
+# app route for admins to upload surveys
+# In future, survey owners would be able to upload their surveys
 @app.route('/upload_survey/<password>/<survey_name>/<description>/<html>')
 def upload_survey(password, survey_name, description, html):
 	# Would check if survey already exists, if not, create one with the params
 	if password == "Slakee404!":
-		with open(f"data/{survey_name}.txt", "w") as f:
-			f.write(f"{description}")
-			f.close()
-		with open(f"data/{survey_name}.html", "w") as f:
-			f.write(f"{html}")
-			f.close()
-		s = open("data/surveys.txt")
-		s = eval(s.read())
-		s.insert(survey_name)
-		with open("data/surveys.txt") as f:
-			f.truncate()
-			f.write(str(s))
-			f.close()
-		return jsonify("Successfully added survey")
-	return jsonify("Couldn't add survey, Something went wrong")
+		if os.path.isfile(f"data/{survey_name}.txt"):
+			with open(f"data/{survey_name}.txt", "w") as f:
+				f.write(f"{description}")
+				f.close()
+			with open(f"data/{survey_name}.html", "w") as f:
+				f.write(f"{html}")
+				f.close()
+			s = open("data/surveys.txt")
+			s = eval(s.read())
+			s.append(survey_name)
+			with open("data/surveys.txt") as f:
+				f.truncate()
+				f.write(str(s))
+				f.close()
+			return jsonify("Successfully added survey")
+		else:
+			return jsonify("The name of the survey already exists.")
+	else:
+		return jsonify("The password is Incorrect. Don't try again")
 
+# app route for admins to delete surveys from the general database
+# This should be done when the owner of the survey has gotten the complete
+# survey responses, in future versions of this code, this would be done 
+# automatically by counting the number of slakenet users that take the survey
+# and thee initial number of survey responses the owner paid for
+# do some if else statements and do the stuff
 @app.route('/delete_survey/<password>/<survey_name>')
 def delete_survey(survey_name):
 	if password == "Slakee404!":
@@ -126,7 +139,6 @@ def delete_survey(survey_name):
 			f.close()
 		return jsonify("Successfully deleted survey")
 	return jsonify("Couldn't delete survey, something went wrong")
-
 
 if __name__=='__main__':
 	app.run(debug = True)
