@@ -84,68 +84,6 @@ def update_user_balance(email, amount):
     account_balance = DATA_SERVICE.update_balance(email, amount)
     return jsonify(account_balance)
 
-# def add_expense():
-#     """ Adds expense to logged in users wallet """
-#     if not is_logged_in():
-#         return redirect(url_for('page_index'))
-
-#     form = AddExpenseForm()
-#     if form.validate():
-#         status = DATA_SERVICE.add_expense(
-#             session['email'], form.amount.data, form.note.data)
-
-#         flash(status, "success")
-#         return redirect(url_for('page_dashboard'))
-
-#     flash(i18n.t('wallet.expense_invalid'), "error")
-#     add_expense_form = AddExpenseForm()
-#     user_expenses = get_user_expenses()
-#     return render_template('dashboard.html', logged_in=True, balance=load_user_balance(), expense_form=add_expense_form, expenses=user_expenses)
-
-
-# def get_user_expenses():
-#     """ Gets user expenses """
-#     account_expenses = DATA_SERVICE.get_user_expenses(session['email'])
-#     return account_expenses
-
-
-# def get_user_expense_by_id(expense_id):
-#     """ Gets user expense with specified expense id """
-#     account_expense = DATA_SERVICE.get_user_expense_by_id(
-#         expense_id, session['email'])
-#     return account_expense
-
-
-# def update_expense(expense_id):
-#     """ Updates expense to logged in user's wallet """
-#     if not is_logged_in():
-#         return redirect(url_for('page_index'))
-
-#     user_expense = get_user_expense_by_id(expense_id)
-#     form = AddExpenseForm(obj=user_expense)
-#     if form.validate():
-#         status = DATA_SERVICE.update_expense(
-#             session['email'], expense_id, form.amount.data, form.note.data)
-
-#         flash(status, "success")
-#         return redirect(url_for('page_dashboard'))
-
-#     flash(i18n.t('wallet.expense_invalid'), "error")
-#     user_expense = get_user_expense_by_id(expense_id)
-#     return render_template('edit_expense.html', logged_in=True, expense_form=AddExpenseForm(obj=user_expense))
-
-
-# def delete_expense(expense_id):
-#     """ Deletes expense from logged in user's wallet """
-#     if not is_logged_in():
-#         return redirect(url_for('page_index'))
-
-#     user_expense = get_user_expense_by_id(expense_id)
-#     status = DATA_SERVICE.delete_expense(session['email'], expense_id)
-#     flash(status, "success")
-#     return redirect(url_for('page_dashboard'))
-
-
 def get_account_details():
     """ Gets account details based on an ID """
     account_details = DATA_SERVICE.get_account_details(session['email'])
@@ -167,3 +105,11 @@ def topup():
     flash(i18n.t('wallet.topup_invalid'), "error")
     account_details = get_account_details()
     return render_template('profile.html', logged_in=True, account=account_details, topup_form=TopUpForm())
+
+# def verify_email():DATA_SERVICE.verify_email(session['email'])
+def verify_email(email):return DATA_SERVICE.verify_email(email)
+
+def get_reset_token(email):DATA_SERVICE.get_reset_token(email)
+
+def verify_reset_token():DATA_SERVICE.verify_reset_token(get_reset_token())
+
