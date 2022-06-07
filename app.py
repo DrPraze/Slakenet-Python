@@ -2,19 +2,36 @@
 from flask import (Flask, jsonify, request, send_from_directory,
 	render_template, session, url_for, redirect, flash)
 from flask_cors import CORS
-import os, i18n, requests
+import os, i18n, requests, uuid
 from settings import Config
 # Import some already handled routes in for userbase
 from routes import initialize_website_routes, initialize_error_handlers
 # Use waitress to serve flask app
 from waitress import serve
-from middleware import load_user_balance, update_user_balance
+from middleware import (load_user_balance, update_user_balance,
+	verify_email, get_reset_token, verify_reset_token)
 from dataservice import DataService
+# from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from flask_mail import Message, Mail
+
+# from flask_login import login_required
+ 
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USE_SSL = True
+# MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+# MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+MAIL_USERNAME = "slakenetofficial@gmail.com"
+MAIL_PASSWORD = "Slakee404!"
 
 app = Flask(__name__)
 CORS(app)
 
-SECRET_KEY = os.urandom(32)
+mail = Mail()
+mail.init_app(app)
+# SECRET_KEY = os.urandom(32)
+SECRET_KEY = str(uuid.uuid4())
+# SECRET_KEY = "Slakee404!"
 app.config['SECRET_KEY'] = SECRET_KEY
 
 # No sand box available for VTU.ng
@@ -126,19 +143,73 @@ def upload_survey(password, survey_name, description, html):
 @app.route('/delete_survey/<password>/<survey_name>')
 def delete_survey(survey_name):
 	if password == "Slakee404!":
-		with open(f"data/{survey_name}.txt") as textfile:
-			os.remove(textfile)
-		with open(f"data/{survey_name}.html") as htmlfile:
-			os.remove(htmlfile)
-		s = open("data/surves.txt")
-		s = eval(s.read())
-		s.pop(s.index(survey_name))
-		with open("data/surveys.txt") as f:
-			f.truncate()
-			f.write(str(s))
-			f.close()
-		return jsonify("Successfully deleted survey")
-	return jsonify("Couldn't delete survey, something went wrong")
+		if os.path.isfile(f"data/{survey_name}.txt"):
+			with open(f"data/{survey_name}.txt") as textfile:
+				os.remove(textfile)
+			with open(f"data/{survey_name}.html") as htmlfile:
+				os.remove(htmlfile)
+			s = open("data/surveys.txt")
+			s = eval(s.read())
+			s.pop(s.index(survey_name))
+			with open("data/surveys.txt") as f:
+				f.truncate()
+				f.write(str(s))
+				f.close()
+			return jsonify("Successfully deleted survey")
+		else:
+			return jsonify("Couldn't delete survey, the survey doesn't exist")
+	else:
+		return jsonify("Couldn't delete survey, password was Incorrect")
 
+
+# This is the section we're working on now
+@app.route('/password_reset', methods=['GET', 'POST'])
+def reset():
+    if request.method == 'GET':
+        return render_template('reset.html')
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = verify_email(email)
+        flash(i18n.t(user))
+        if user:
+        	token = get_reset_token(email)
+        	print(token)
+        	msg = Message()
+        	msg.subject = "Slakenet Password Reset"
+        	msg.sender = "slakenetofficial@gmail.com"
+        	msg.recipients = [email]
+        	msg.html = render_template('reset_email.html', user = email, token=token)
+        	try:
+        		mail.send(msg)
+        	except Exception as e:
+        		flash(i18n.t("We couldn't send the verification email"+e" visit the help section to get help"))
+
+        	flash(i18n.t("Check your Successfully submitted email for the password reset"))
+        else:
+        	flash(i18n.t("The email you entered doesn't exist"))
+        return redirect(url_for("page_dashboard"))
+
+@app.route('/reset_verified', methods=['GET', 'POST'])
+def reset_verified():
+    user = verify_reset_token(token)
+    if not user:
+        flash(i18n.t('User Email not found'))
+        return redirect(url_for('page_dashboard'))
+
+    password = request.form.get('password')
+    if password:
+        user.set_password(password, commit=True)
+        return redirect(url_for('page_dashboard'))
+    return render_template('reset_verified.html')
+# End of underdeveloped section
+# Requires some modifications on the jwt, I'll look into it
+
+@app.route("/request_userdata/")
+def request_KPI():
+	with open("data/emails.txt") as f:
+		users = eval(f.read())
+		number_of_users = len(users)
+
+		return (number_of_users)
 if __name__=='__main__':
 	app.run(debug = True)
