@@ -1,8 +1,8 @@
 """ Defines data layer wrapper """
-import i18n
+import i18n, jwt, os
 # from models import User, Expense
 from models import User
-
+from time import time
 
 # Add locales folder to translation path
 i18n.load_path.append('locales')
@@ -73,3 +73,28 @@ class DataService:
 				return i18n.t('wallet.topup_successful')
 
 			return i18n.t('wallet.topup_unsuccessful')
+
+	def verify_email(self, email):
+		dict_ = eval(open("data/emails.txt", "r").read())
+		if email in dict_:
+			return email
+
+	def verify_reset_token(token):
+		try:
+			email = jwt.decode(token,
+				key=os.getenv('SECRET_KEY'))['reset_password']
+			print(email)
+		except Exception as e:
+			print(e)
+			return
+		# return User.query.filter_by(username=username).first()
+		dict_ = eval(open("data/emails.txt", "r").read())
+		if email in dict_:
+			return email
+
+	
+	def get_reset_token(self, email, expires=500):
+		return jwt.encode({'reset_password': str(email), 'exp': str(time() + expires)},
+			key=str(os.getenv('SECRET_KEY')))
+
+
