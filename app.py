@@ -182,7 +182,7 @@ def reset():
         	try:
         		mail.send(msg)
         	except Exception as e:
-        		flash(i18n.t("We couldn't send the verification email"+e" visit the help section to get help"))
+        		flash(i18n.t("We couldn't send the verification email:"+e+" visit the help section to get help"))
 
         	flash(i18n.t("Check your Successfully submitted email for the password reset"))
         else:
