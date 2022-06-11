@@ -181,10 +181,9 @@ def reset():
         	msg.html = render_template('reset_email.html', user = email, token=token)
         	try:
         		mail.send(msg)
+        		flash(i18n.t("Check your Successfully submitted email for the password reset"))
         	except Exception as e:
-        		flash(i18n.t("We couldn't send the verification email:"+e+" visit the help section to get help"))
-
-        	flash(i18n.t("Check your Successfully submitted email for the password reset"))
+        		flash(i18n.t("We couldn't send the verification email:"+str(e)+" visit the help section to get help"))
         else:
         	flash(i18n.t("The email you entered doesn't exist"))
         return redirect(url_for("page_dashboard"))
@@ -204,12 +203,16 @@ def reset_verified():
 # End of underdeveloped section
 # Requires some modifications on the jwt, I'll look into it
 
-@app.route("/request_userdata/")
-def request_KPI():
-	with open("data/emails.txt") as f:
-		users = eval(f.read())
-		number_of_users = len(users)
+@app.route("/<password>/request_userdata")
+def request_userdata():
+	# KPI is under-developed and only returns the number of users for now
+	if password == "Slakee404!":
+		with open("data/emails.txt") as f:
+			users = eval(f.read())
+			number_of_users = len(users)
+			return number_of_users
+	else:
+		return jsonify("Incorrect password")
 
-		return (number_of_users)
 if __name__=='__main__':
 	app.run(debug = True)
