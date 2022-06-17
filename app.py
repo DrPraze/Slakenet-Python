@@ -22,6 +22,7 @@ MAIL_USE_SSL = True
 # MAIL_USERNAME = os.getenv('MAIL_USERNAME')
 # MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
 MAIL_USERNAME = "slakenetofficial@gmail.com"
+# MAIL_USERNAME = "info@slakenet.com.ng"
 MAIL_PASSWORD = "Slakee404!"
 
 app = Flask(__name__)
@@ -34,6 +35,8 @@ SECRET_KEY = str(uuid.uuid4())
 # SECRET_KEY = "Slakee404!"
 app.config['SECRET_KEY'] = SECRET_KEY
 
+# Site Key for google reCAPTCHA
+sitekey = "Some Key"
 # No sand box available for VTU.ng
 # sandbox = "optional-sandbox"
 
@@ -63,7 +66,7 @@ def policy():
 def buy_airtime(network, number, amount):
 	account_balance = load_user_balance()
 	if int(account_balance) > int(amount):
-		r = requests.get("https://vtu.ng/wp-json/api/v1/airtime?username=slakenet&password=Slakee404!&phone="+number+"&network_id="+network+"&amount="+amount)
+		r = requests.get("https://vtu.ng/wp-json/api/v1/airtime?username=slakenetTU&password=Slakee404!&phone="+number+"&network_id="+network+"&amount="+amount)
 		if r["code"] == "success":
 			account_balance = int(account_balance)-amount
 			flash(i18n.t("wallet.topup_successful"))
@@ -104,7 +107,7 @@ def deposit(email, admin_password, amount):
 		try:
 			return update_user_balance(email, amount)
 		except Exception as e:
-			return "email doesn't exist in database"
+			return jsonify("email doesn't exist in database"+str(e))
 	else:
 		return jsonify("Incorrect password")
 
@@ -114,7 +117,7 @@ def deposit(email, admin_password, amount):
 def upload_survey(password, survey_name, description, html):
 	# Would check if survey already exists, if not, create one with the params
 	if password == "Slakee404!":
-		if os.path.isfile(f"data/{survey_name}.txt"):
+		if not os.path.isfile(f"data/{survey_name}.txt"):
 			with open(f"data/{survey_name}.txt", "w") as f:
 				f.write(f"{description}")
 				f.close()
@@ -161,7 +164,6 @@ def delete_survey(survey_name):
 	else:
 		return jsonify("Couldn't delete survey, password was Incorrect")
 
-
 # This is the section we're working on now
 @app.route('/password_reset', methods=['GET', 'POST'])
 def reset():
@@ -194,7 +196,7 @@ def reset_verified():
     if not user:
         flash(i18n.t('User Email not found'))
         return redirect(url_for('page_dashboard'))
-
+       
     password = request.form.get('password')
     if password:
         user.set_password(password, commit=True)
@@ -213,6 +215,59 @@ def request_userdata():
 			return number_of_users
 	else:
 		return jsonify("Incorrect password")
+
+@app.route("/send_specific_surveys/<password>/<survey_name>/<description>/<html>/<users>")
+def send_specific_surveys(password, survey_name, description, html, users):
+	if password == "Slakee404!":
+		if not os.path.isfile(f"data/{survey_name}.txt"):
+			with open(f"data/{survey_name}.txt", "w") as f:
+				f.write(f"{description}")
+				f.close()
+			with open(f"data/{survey_name}.html", "w") as f:
+				f.write(f"{html}")
+				f.close()
+			s = open("data/surveys.txt")
+			s = eval(s.read())
+			s.append(survey_name)
+			with open("data/surveys.txt") as f:
+				f.truncate()
+				f.write(str(s))
+				f.close()
+			done = eval(open("data/done.txt"))
+			for user in done:
+				if user not in users:
+					user_email = session['email']
+					survey_list = done[user_email]
+					survey_list.append(taken_survey)
+					done[user_email] = survey_list
+					f = open('data/done.txt', 'w')
+					f.truncate()
+					f.write(str(done))
+					return jsonify("Successfully added persnonalized surveys")
+		else:
+			return jsonify("The name of the survey already exists.")
+	else:
+		return jsonify("The password is Incorrect. Don't try again")
+
+
+@app.route("/submit_browsing_data/<password>/<user>/<data>")
+def submit_browsing_data(user, data):
+	with open("data/browsing_data.txt") as f:
+		full_data = eval(f.read())
+		browsing_data = full_data[user]
+		browsing_data.append(data)
+		full_data[user] = browsing_data
+		f.close()
+		with open("data/browsing_data.txt", "w") as file:
+			file.truncate()
+			file.write(str(full_data))
+	return jsonify("Updated")
+
+@app.route("/get_browsing_urls/<password>/")
+def get_browsing_urls():
+	if password == "Slakee404!":
+		return (open("data/browsing_data.txt").read())
+
 
 if __name__=='__main__':
 	app.run(debug = True)
